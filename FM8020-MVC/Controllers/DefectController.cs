@@ -67,7 +67,7 @@ namespace FM8020_MVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Defect/Create/{roomId}")]
-        public async Task<IActionResult> Create(int roomId, [Bind("Id,Title,Description,Done")] DefectModel defectModel)
+        public async Task<IActionResult> Create(int roomId, [Bind("Id,Title,Timestamp,Description,Done")] DefectModel defectModel)
         {
             Debug.WriteLine("Room id: ", roomId);
             RoomModel room = _context.Rooms.Find(roomId);
@@ -109,7 +109,7 @@ namespace FM8020_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Done")] DefectModel defectModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Timestamp,Description,Done")] DefectModel defectModel)
         {
             if (id != defectModel.Id)
             {

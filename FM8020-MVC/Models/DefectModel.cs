@@ -14,6 +14,7 @@ namespace FM8020_MVC.Models
         public RoomModel Room { get; set; }
         [Required]
         public string Title { get; set; }
+        public DateTime Timestamp{ get; set; }
         public string Description { get; set; }
         public bool Done { get; set; }
     }

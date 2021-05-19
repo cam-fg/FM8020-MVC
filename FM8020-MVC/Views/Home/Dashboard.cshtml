@@ -16,7 +16,8 @@
                     <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Count()</b></button>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>0</b></button>
+                    @{ var today = DateTime.Today.Date;}
+                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Where(d => d.Timestamp.Date == today).Count()</b></button>
                 </td>
                 <td>
                     <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Where(d => d.Done).Count()</b></button>
