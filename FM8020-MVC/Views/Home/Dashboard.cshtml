@@ -32,6 +32,16 @@
     </table>
 </div>
 <br />
+<p>
+    <div class="dropdown float-right">
+        <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sort"></i> Sortieren </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Neueste zuerst</a>
+            <a class="dropdown-item" href="#">Älteste zuerst</a>
+            <a class="dropdown-item" href="#">Nach Räumen</a>
+        </div>
+    </div>
+</p>
 <div class="accordion" id="dashboardAccordion">
     @foreach (DefectModel defect in Model)
     {
