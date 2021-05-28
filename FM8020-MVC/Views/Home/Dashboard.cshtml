@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FM8020_MVC.Models.DefectModel>
+﻿@model DefectViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -13,20 +13,29 @@
         <tbody>
             <tr class="text-center">
                 <td>
-                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Count()</b></button>
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="Dashboard" asp-route-filterString="Open">
+                        <b>@Model.OpenCount</b>
+                    </a>                   
                 </td>
                 <td>
                     @{ var today = DateTime.Today.Date;}
-                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Where(d => d.Timestamp.Date == today).Count()</b></button>
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="Dashboard" asp-route-filterString="New">
+                    <b>@Model.NewCount</b></a>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Where(d => d.Done).Count()</b></button>
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="Dashboard" asp-route-filterString="Done">
+                    <b>@Model.DoneCount</b></a>
+                </td>
+                <td>
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="Dashboard" asp-route-filterString="All">
+                    <b>@Model.TotalCount</b></a>
                 </td>
             </tr>
             <tr class="text-center">
-                <td>Gesamt</td>
+                <td>Offen</td>
                 <td>Neu</td>
                 <td>Erledigt</td>
+                <td>Gesamt</td>
             </tr>
         </tbody>
     </table>
@@ -36,14 +45,14 @@
     <div class="dropdown float-right">
         <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sort"></i> Sortieren </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Neueste zuerst</a>
-            <a class="dropdown-item" href="#">Älteste zuerst</a>
-            <a class="dropdown-item" href="#">Nach Räumen</a>
+            <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="date_desc">Neueste zuerst</a>
+            <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="Date">Älteste zuerst</a>
+            <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="Room">Nach Räumen</a>
         </div>
     </div>
 </p>
 <div class="accordion" id="dashboardAccordion">
-    @foreach(DefectModel defect in Model.Where(d => d.Done == false))
+    @foreach(DefectModel defect in Model.FilteredDefects)
     {
     <div class="card mb-2">
         <div class="card-header d-flex justify-content-between" id="heading_@defect.Id">
@@ -51,7 +60,8 @@
                 <button class="btn" type="button" data-toggle="collapse" data-target="#collapse_@defect.Id" aria-expanded="true" aria-controls="collapse_@defect.Id">
                     <h5>@defect.Title</h5>
                 </button>
-                @Html.DisplayFor(modelItem => defect.Room.Facility.FacilityCode), Raum @Html.DisplayFor(modelItem => defect.Room.RoomNumber)
+                @Html.DisplayFor(modelItem => defect.Room.Facility.FacilityCode), Raum @Html.DisplayFor(modelItem => defect.Room.RoomNumber) -
+                @defect.Timestamp.ToString("dd.MM.yyyy")
             </div>
             <div class="float-right">
                 <a class="btn btn-primary float-right" asp-controller="Defect" asp-action="Details" asp-route-id="@defect.Id">Details</a>
