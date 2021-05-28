@@ -67,19 +67,20 @@ namespace FM8020_MVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Defect/Create/{roomId}")]
-        public async Task<IActionResult> Create(int roomId, [Bind("Id,Title,Timestamp,Description,Done")] DefectModel defectModel)
+        public async Task<IActionResult> Create(int roomId, [Bind("Id,Title,Timestamp,Description")] DefectModel defectModel)
         {
             Debug.WriteLine("Room id: ", roomId);
             RoomModel room = _context.Rooms.Find(roomId);
             if (room != null)
             {
                 defectModel.Room = room;
+                defectModel.Done = false;
                 if (ModelState.IsValid)
                 {
                     Debug.WriteLine("Valid ModelState");
                     _context.Add(defectModel);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Success));
                 }
             }
             var errors = ModelState.Values.SelectMany(v => v.Errors);
@@ -134,7 +135,7 @@ namespace FM8020_MVC.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Home");
             }
             return View(defectModel);
         }
@@ -171,6 +172,11 @@ namespace FM8020_MVC.Controllers
         private bool DefectModelExists(int id)
         {
             return _context.Defects.Any(e => e.Id == id);
+        }
+
+        public IActionResult Success()
+        {
+            return View();
         }
     }
 }

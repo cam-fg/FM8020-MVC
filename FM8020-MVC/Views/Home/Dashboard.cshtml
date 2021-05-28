@@ -43,25 +43,25 @@
     </div>
 </p>
 <div class="accordion" id="dashboardAccordion">
-    @foreach (DefectModel defect in Model)
+    @foreach(DefectModel defect in Model.Where(d => d.Done == false))
     {
-        <div class="card mb-2">
-            <div class="card-header d-flex justify-content-between" id="heading_@defect.Id">
-                <div class="float-left">
-                    <button class="btn" type="button" data-toggle="collapse" data-target="#collapse_@defect.Id" aria-expanded="true" aria-controls="collapse_@defect.Id">
-                        <h5>@defect.Title</h5>
-                    </button>
-                    @Html.DisplayFor(modelItem => defect.Room.Facility.FacilityCode), Raum @Html.DisplayFor(modelItem => defect.Room.RoomNumber)
-                </div>
-                <div class="float-right">
-                    <a class="btn btn-primary float-right" asp-controller="Defect" asp-action="Details" asp-route-id="@defect.Id">Details</a>
-                </div>
+    <div class="card mb-2">
+        <div class="card-header d-flex justify-content-between" id="heading_@defect.Id">
+            <div class="float-left">
+                <button class="btn" type="button" data-toggle="collapse" data-target="#collapse_@defect.Id" aria-expanded="true" aria-controls="collapse_@defect.Id">
+                    <h5>@defect.Title</h5>
+                </button>
+                @Html.DisplayFor(modelItem => defect.Room.Facility.FacilityCode), Raum @Html.DisplayFor(modelItem => defect.Room.RoomNumber)
             </div>
-            <div id="collapse_@defect.Id" class="collapse hide" aria-labelledby="heading_@defect.Id" data-parent="#dashboardAccordion">
-                <div class="card-body">
-                    @defect.Description
-                </div>
+            <div class="float-right">
+                <a class="btn btn-primary float-right" asp-controller="Defect" asp-action="Details" asp-route-id="@defect.Id">Details</a>
             </div>
         </div>
+        <div id="collapse_@defect.Id" class="collapse hide" aria-labelledby="heading_@defect.Id" data-parent="#dashboardAccordion">
+            <div class="card-body">
+                @defect.Description
+            </div>
+        </div>
+    </div>
     }
 </div>
