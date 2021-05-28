@@ -1,5 +1,7 @@
-﻿using FM8020_MVC.Models;
+﻿using FM8020_MVC.Data;
+using FM8020_MVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,9 +14,11 @@ namespace FM8020_MVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly FMContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, FMContext context)
         {
+            _context = context;
             _logger = logger;
         }
 
@@ -23,9 +27,9 @@ namespace FM8020_MVC.Controllers
             return View();
         }
 
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
-            return View();
+            return View(await _context.Defects.Include(m => m.Room).ThenInclude(m => m.Facility).ToListAsync());
         }
 
         public IActionResult Privacy()

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FM8020_MVC.Data;
 using FM8020_MVC.Models;
+using System.Diagnostics;
 
 namespace FM8020_MVC.Controllers
 {
@@ -44,9 +45,20 @@ namespace FM8020_MVC.Controllers
         }
 
         // GET: Defect/Create
-        public IActionResult Create()
+        [Route("Defect/Create/{roomId?}")]
+        public IActionResult Create(int? roomId)
         {
-            return View();
+            if (roomId.HasValue)
+            {
+                DefectModel defect = new DefectModel();
+                RoomModel room = _context.Rooms.Find(roomId.Value);
+                if (room != null)
+                {
+                    defect.Room = room;
+                    return View(defect);
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         // POST: Defect/Create
@@ -54,14 +66,25 @@ namespace FM8020_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Done")] DefectModel defectModel)
+        [Route("Defect/Create/{roomId}")]
+        public async Task<IActionResult> Create(int roomId, [Bind("Id,Title,Timestamp,Description,Done")] DefectModel defectModel)
         {
-            if (ModelState.IsValid)
+            Debug.WriteLine("Room id: ", roomId);
+            RoomModel room = _context.Rooms.Find(roomId);
+            if (room != null)
             {
-                _context.Add(defectModel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                defectModel.Room = room;
+                if (ModelState.IsValid)
+                {
+                    Debug.WriteLine("Valid ModelState");
+                    _context.Add(defectModel);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            Debug.WriteLine("invalid ModelState");
+            Debug.WriteLine(errors);
             return View(defectModel);
         }
 
@@ -86,7 +109,7 @@ namespace FM8020_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Done")] DefectModel defectModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Timestamp,Description,Done")] DefectModel defectModel)
         {
             if (id != defectModel.Id)
             {

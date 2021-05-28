@@ -1,8 +1,67 @@
-﻿@{
+﻿@model IEnumerable<FM8020_MVC.Models.DefectModel>
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
 <div class="text-center">
     <h1 class="display-4">Dashboard</h1>
     <p>Hier sind alle aktuellen Mängel einzusehen.</p>
+</div>
+<div class="d-flex justify-content-md-center">
+    <table class="table-responsive-md">
+        <tbody>
+            <tr class="text-center">
+                <td>
+                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Count()</b></button>
+                </td>
+                <td>
+                    @{ var today = DateTime.Today.Date;}
+                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Where(d => d.Timestamp.Date == today).Count()</b></button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-light btn-lg border-primary m-3 mb-0"><b>@Model.Where(d => d.Done).Count()</b></button>
+                </td>
+            </tr>
+            <tr class="text-center">
+                <td>Gesamt</td>
+                <td>Neu</td>
+                <td>Erledigt</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br />
+<p>
+    <div class="dropdown float-right">
+        <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sort"></i> Sortieren </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Neueste zuerst</a>
+            <a class="dropdown-item" href="#">Älteste zuerst</a>
+            <a class="dropdown-item" href="#">Nach Räumen</a>
+        </div>
+    </div>
+</p>
+<div class="accordion" id="dashboardAccordion">
+    @foreach (DefectModel defect in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-header d-flex justify-content-between" id="heading_@defect.Id">
+                <div class="float-left">
+                    <button class="btn" type="button" data-toggle="collapse" data-target="#collapse_@defect.Id" aria-expanded="true" aria-controls="collapse_@defect.Id">
+                        <h5>@defect.Title</h5>
+                    </button>
+                    @Html.DisplayFor(modelItem => defect.Room.Facility.FacilityCode), Raum @Html.DisplayFor(modelItem => defect.Room.RoomNumber)
+                </div>
+                <div class="float-right">
+                    <a class="btn btn-primary float-right" asp-controller="Defect" asp-action="Details" asp-route-id="@defect.Id">Details</a>
+                </div>
+            </div>
+            <div id="collapse_@defect.Id" class="collapse hide" aria-labelledby="heading_@defect.Id" data-parent="#dashboardAccordion">
+                <div class="card-body">
+                    @defect.Description
+                </div>
+            </div>
+        </div>
+    }
 </div>
