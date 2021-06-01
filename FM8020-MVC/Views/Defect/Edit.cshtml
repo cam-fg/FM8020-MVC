@@ -15,23 +15,23 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label">Problem</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Timestamp" class="control-label"></label>
+                <label asp-for="Timestamp" class="control-label">Uhrzeit</label>
                 <input readonly asp-for="Timestamp" class="form-control" />
                 <span asp-validation-for="Timestamp" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
+                <label asp-for="Description" class="control-label">Details</label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Done" /> @Html.DisplayNameFor(model => model.Done)
+                    Erledigt <input class="form-check-input" asp-for="Done" /> 
                 </label>
             </div>
             <div class="form-group">

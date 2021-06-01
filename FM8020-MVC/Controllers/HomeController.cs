@@ -27,11 +27,9 @@ namespace FM8020_MVC.Controllers
             return View();
         }
 
-        [Route("Home/Dashboard/{filterString?}/{sortOrder?}")]
-        public async Task<IActionResult> Dashboard(string filterString, string sortOrder)
+        [Route("Home/Dashboard/{filterString?}/{sortOrder?}/{componentFilter?}")]
+        public async Task<IActionResult> Dashboard(string filterString, string sortOrder, string componentFilter)
         {
-/*            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["RoomSortParm"] = sortOrder == "Room" ? "room_desc" : "Room";*/
             ViewData["CurrentFilter"] = filterString;
             var defects = from d in _context.Defects
                            select d;
@@ -78,6 +76,12 @@ namespace FM8020_MVC.Controllers
                 default:
                     defects = defects.OrderBy(d => d.Timestamp);
                     break;
+            }
+
+            if (!String.IsNullOrEmpty(componentFilter))
+            {
+                ComponentType defectType = (ComponentType)Enum.Parse(typeof(ComponentType), componentFilter);
+                defects = defects.Where(d => d.DefectType.Equals(defectType));
             }
 
             defectVM.FilteredDefects = await defects.Include(m => m.Room).ThenInclude(m => m.Facility).ToListAsync();

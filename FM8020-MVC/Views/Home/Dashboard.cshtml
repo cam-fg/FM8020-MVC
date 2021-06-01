@@ -1,4 +1,4 @@
-﻿@model DefectViewModel
+﻿@model FM8020_MVC.Models.DefectViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -42,14 +42,27 @@
 </div>
 <br />
 <p>
-    <div class="dropdown float-right">
-        <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sort"></i> Sortieren </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="date_desc">Neueste zuerst</a>
-            <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="Date">Älteste zuerst</a>
-            <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="Room">Nach Räumen</a>
+    <div class="d-inline-flex">
+        <div class="dropdown float-right col m-2">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sort"></i> Sortieren </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="date_desc">Neueste zuerst</a>
+                <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="Date">Älteste zuerst</a>
+                <a class="dropdown-item" asp-action="Dashboard" asp-route-sortOrder="Room">Nach Räumen</a>
+            </div>
+        </div>
+        <div class="dropdown float-right col m-2">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownComponentFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter"></i> Filter </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownComponentFilter">
+                @foreach (ComponentType ct in Enum.GetValues(typeof(ComponentType)).Cast<ComponentType>().ToList())
+                {
+                    <a class="dropdown-item" asp-action="Dashboard" asp-route-componentFilter="@ct">@ct</a>
+                }
+
+            </div>
         </div>
     </div>
+
 </p>
 <div class="accordion" id="dashboardAccordion">
     @foreach(DefectModel defect in Model.FilteredDefects)

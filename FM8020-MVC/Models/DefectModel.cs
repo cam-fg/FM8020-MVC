@@ -15,7 +15,28 @@ namespace FM8020_MVC.Models
         [Required]
         public string Title { get; set; }
         public DateTime Timestamp{ get; set; }
+        public ComponentType DefectType { get; set; }
         public string Description { get; set; }
         public bool Done { get; set; }
     }
+    public enum ComponentType
+    {
+        [Display(Name = "Sonstiges")]
+        Other,
+        [Display(Name = "Steckdose")]
+        PlugSocket,
+        [Display(Name = "Lampe")]
+        Lamp,
+        [Display(Name = "Fenster")]
+        Window,
+        Beamer,
+        Computer,
+        [Display(Name = "Kartenleser")]
+        CardReader,
+        [Display(Name = "Heizung")]
+        Heater,
+        [Display(Name = "Möbel")]
+        Furniture
+    }
 }
+
