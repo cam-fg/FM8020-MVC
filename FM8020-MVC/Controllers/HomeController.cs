@@ -27,17 +27,47 @@ namespace FM8020_MVC.Controllers
             return View();
         }
 
-        [Route("Home/Dashboard/{filterString?}/{sortOrder?}/{componentFilter?}")]
-        public async Task<IActionResult> Dashboard(string filterString, string sortOrder, string componentFilter)
+        [Route("Home/Dashboard/{timeView=week}/{weekStart?}/{filterString=Open}/{sortOrder=date_desc}/{componentFilter=all}")]
+        public async Task<IActionResult> Dashboard(string timeView, string weekStart, string filterString, string sortOrder, string componentFilter)
         {
             ViewData["CurrentFilter"] = filterString;
-            var defects = from d in _context.Defects
-                           select d;
+
+
+            DateTime timeframeStart = DateTime.MinValue;
+            DateTime timeframeEnd = DateTime.MaxValue;
+            if (!String.IsNullOrEmpty(timeView))
+            {
+                if (timeView.Equals("alltime"))
+                {
+                    Debug.WriteLine("Alltime view");
+
+                } else if (timeView.Equals("week"))
+                {
+                    Debug.WriteLine("Weekly view");
+                    if (!String.IsNullOrEmpty(weekStart))
+                    {
+                        timeframeStart = DateTime.Parse(weekStart);
+                    }
+                    else
+                    {
+                        DayOfWeek weekday = DateTime.Today.DayOfWeek;
+                        int diff = (7 + (weekday - DayOfWeek.Monday)) % 7;
+                        timeframeStart = DateTime.Today.AddDays(-1 * diff).Date;
+                    }
+                    timeframeEnd = timeframeStart.AddDays(6);
+                }
+            }
+
+            var defects = from d in _context.Defects.Where(d => (d.Timestamp >= timeframeStart) && (d.Timestamp < timeframeEnd))
+                          select d;
+
             DefectViewModel defectVM = new DefectViewModel(
                 defects.Count(),
                 defects.Where(d => d.Done == false).Count(),
                 defects.Where(d => d.Timestamp.Date == DateTime.Today).Count(),
-                defects.Where(d => d.Done).Count()
+                defects.Where(d => d.Done).Count(),
+                timeframeStart,
+                timeframeEnd
                 );
              
 
@@ -78,11 +108,14 @@ namespace FM8020_MVC.Controllers
                     break;
             }
 
-            if (!String.IsNullOrEmpty(componentFilter))
-            {
-                ComponentType defectType = (ComponentType)Enum.Parse(typeof(ComponentType), componentFilter);
-                defects = defects.Where(d => d.DefectType.Equals(defectType));
-            }
+            if (!String.IsNullOrEmpty(componentFilter))  
+                if (!componentFilter.Equals("all"))
+                {
+                    {
+                        ComponentType defectType = (ComponentType)Enum.Parse(typeof(ComponentType), componentFilter);
+                        defects = defects.Where(d => d.DefectType.Equals(defectType));
+                    }
+                }
 
             defectVM.FilteredDefects = await defects.Include(m => m.Room).ThenInclude(m => m.Facility).ToListAsync();
             return View(defectVM);           

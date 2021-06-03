@@ -8,6 +8,33 @@
     <h1 class="display-4">Dashboard</h1>
     <p>Hier sind alle aktuellen Mängel einzusehen.</p>
 </div>
+<div class="text-center">
+    <div class="btn-group btn-group-toggle">
+        <a class="btn btn-secondary" asp-action="Dashboard" asp-route-timeView="alltime">Gesamt</a>
+        <label class="btn btn-secondary">
+           Tag
+        </label>
+        <a class="btn btn-secondary" asp-action="Dashboard" asp-route-timeView="week">Woche</a>     
+        <label class="btn btn-secondary">
+            Jahr
+        </label>
+    </div>
+</div>
+<div class="text-center">
+    <p>
+        <h4>
+            <a asp-action="Dashboard" asp-route-weekStart="@Model.TimeframeStart.AddDays(-7).ToString("dd.MM.yy")"><i class="fas fa-arrow-alt-circle-left"></i></a>
+            Vom @Model.TimeframeStart.ToString("dd.MM.yy") bis @Model.TimeframeEnd.ToString("dd.MM.yy")
+            @if (Model.TimeframeEnd >= DateTime.Today)
+            {
+                <a class="btn-link disabled" aria-disabled="true" ><i class="fas fa-arrow-alt-circle-right"></i></a>
+            } else
+            {
+                <a class="btn-link" asp-action="Dashboard" asp-route-weekStart="@Model.TimeframeStart.AddDays(7).ToString("dd.MM.yy")"><i class="fas fa-arrow-alt-circle-right"></i></a>
+            }
+        </h4>
+    </p>
+</div>
 <div class="d-flex justify-content-md-center">
     <table class="table-responsive-md">
         <tbody>
@@ -54,6 +81,7 @@
         <div class="dropdown float-right col m-2">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownComponentFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter"></i> Filter </button>
             <div class="dropdown-menu" aria-labelledby="dropdownComponentFilter">
+                <a class="dropdown-item" asp-action="Dashboard" asp-route-componentFilter="all">Alle</a>
                 @foreach (ComponentType ct in Enum.GetValues(typeof(ComponentType)).Cast<ComponentType>().ToList())
                 {
                     <a class="dropdown-item" asp-action="Dashboard" asp-route-componentFilter="@ct">@ct</a>
