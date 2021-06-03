@@ -26,8 +26,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle bg-dark" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dashboard</a>
+                            <div class="dropdown-menu">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Alltime">Gesamt</a>
+                                <a class="nav-link text-dark" >Täglich</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Weekly">Wöchentlich</a>
+                                <a class="nav-link text-dark" >Jährlich</a>
+                            </div>
                         </li>
                     </ul>
                     <ul class="navbar-nav float-right">

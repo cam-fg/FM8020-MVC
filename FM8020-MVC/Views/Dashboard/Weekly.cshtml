@@ -1,0 +1,27 @@
+﻿@model FM8020_MVC.Models.DefectViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Dashboard</h1>
+    <p>Hier sind alle Meldungen wöchentlich einzusehen.</p>
+</div>
+<div class="text-center">
+    <p>
+        <h4>
+            <a asp-action="Weekly" asp-route-weekStart="@Model.TimeframeStart.AddDays(-7).ToString("dd.MM.yy")"><i class="fas fa-arrow-alt-circle-left"></i></a>
+            Vom @Model.TimeframeStart.ToString("dd.MM.yy") bis @Model.TimeframeEnd.ToString("dd.MM.yy")
+            @if (Model.TimeframeEnd >= DateTime.Today)
+            {
+                <a class="btn-link disabled" aria-disabled="true"><i class="fas fa-arrow-alt-circle-right"></i></a>
+            }
+            else
+            {
+                <a class="btn-link" asp-action="Weekly" asp-route-weekStart="@Model.TimeframeStart.AddDays(7).ToString("dd.MM.yy")"><i class="fas fa-arrow-alt-circle-right"></i></a>
+            }
+        </h4>
+    </p>
+</div>
+<partial name="_DefectList" model="Model"/>
