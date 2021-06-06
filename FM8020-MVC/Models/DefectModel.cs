@@ -11,12 +11,20 @@ namespace FM8020_MVC.Models
     {
         public int Id { get; set; }
         [BindProperty(SupportsGet = true)]
+        [Display(Name = "Raum")]
         public RoomModel Room { get; set; }
+        [Display(Name = "Problem")]
         [Required]
         public string Title { get; set; }
+        [Display(Name = "Uhrzeit")]
         public DateTime Timestamp{ get; set; }
+        [Display(Name = "Kategorie")]
         public ComponentType DefectType { get; set; }
+        [Display(Name = "Beschreibung")]
         public string Description { get; set; }
+        [Display(Name = "Zuständigkeit")]
+        public String Responsibility { get; set; }
+        [Display(Name = "Erledigt")]
         public bool Done { get; set; }
     }
     public enum ComponentType

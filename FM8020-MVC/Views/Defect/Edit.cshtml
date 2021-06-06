@@ -15,27 +15,36 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label">Problem</label>
+                <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Timestamp" class="control-label">Uhrzeit</label>
+                <label asp-for="Timestamp" class="control-label"></label>
                 <input readonly asp-for="Timestamp" class="form-control" />
                 <span asp-validation-for="Timestamp" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label">Details</label>
+                <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Responsibility" class="control-label"></label>
+                <select asp-for="Responsibility" class="form-control">
+                    <option value="Unzugewiesen">Unzugewiesen</option>
+                    <option value="Uwe Bothe">Uwe Bothe</option>
+                    <option value="Facility Manager 2">Facility Manager 2</option>
+                    <option value="Facility Manager 3">Facility Manager 3</option>
+                </select>
+            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    Erledigt <input class="form-check-input" asp-for="Done" /> 
+                    Erledigt <input class="form-check-input" asp-for="Done" />
                 </label>
             </div>
             <div class="form-group">
-                <button class="btn btn-danger" asp-action="Dashboard" asp-controller="Home">Abbrechen</button>
+                <button class="btn btn-danger" asp-action="Weekly" asp-controller="Dashboard">Abbrechen</button>
                 <input type="submit" value="Speichern" class="btn btn-success" />
             </div>
         </form>

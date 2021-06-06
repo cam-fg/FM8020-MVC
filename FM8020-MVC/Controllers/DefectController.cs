@@ -140,7 +140,7 @@ namespace FM8020_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Timestamp,Description,Done")] DefectModel defectModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Timestamp,Description,Responsibility,Done")] DefectModel defectModel)
         {
             if (id != defectModel.Id)
             {
@@ -165,7 +165,7 @@ namespace FM8020_MVC.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Dashboard", "Home");
+                return RedirectToAction("Weekly", "Dashboard");
             }
             return View(defectModel);
         }
