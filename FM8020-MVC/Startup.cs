@@ -45,6 +45,7 @@ namespace FM8020_MVC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             app.UseRouting();
 
             app.UseAuthorization();

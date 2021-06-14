@@ -45,10 +45,9 @@ namespace FM8020_MVC.Controllers
                 int diff = (7 + (weekday - DayOfWeek.Monday)) % 7;
                 timeframeStart = DateTime.Today.AddDays(-1 * diff).Date;
             }
-            timeframeEnd = timeframeStart.AddDays(6);
+            timeframeEnd = timeframeStart.AddDays(7).AddSeconds(-1);
 
-
-            var defects = from d in _context.Defects.Where(d => (d.Timestamp >= timeframeStart) && (d.Timestamp < timeframeEnd))
+            var defects = from d in _context.Defects.Where(d => (d.Timestamp >= timeframeStart) && (d.Timestamp <= timeframeEnd))
                           select d;
 
             DefectViewModel defectVM = new DefectViewModel(

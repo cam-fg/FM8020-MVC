@@ -71,7 +71,7 @@ namespace FM8020_MVC.Controllers
                 }
             }
 
-            return RedirectToAction("Details", new { id = defect.Id });
+            return RedirectToAction("Alltime", "Dashboard");
         }
 
         // GET: Defect/Create
@@ -165,7 +165,7 @@ namespace FM8020_MVC.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Weekly", "Dashboard");
+                return RedirectToAction("Alltime", "Dashboard");
             }
             return View(defectModel);
         }

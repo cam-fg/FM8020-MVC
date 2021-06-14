@@ -16,7 +16,7 @@ namespace FM8020_MVC.Models
         [Display(Name = "Problem")]
         [Required]
         public string Title { get; set; }
-        [Display(Name = "Uhrzeit")]
+        [Display(Name = "Meldezeit")]
         public DateTime Timestamp{ get; set; }
         [Display(Name = "Kategorie")]
         public ComponentType DefectType { get; set; }
