@@ -34,7 +34,7 @@ namespace FM8020_MVC.Controllers
                 return NotFound();
             }
 
-            var defectModel = await _context.Defects
+            var defectModel = await _context.Defects.Include(m => m.Room).ThenInclude(m => m.Facility)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (defectModel == null)
             {
@@ -42,6 +42,36 @@ namespace FM8020_MVC.Controllers
             }
 
             return View(defectModel);
+        }
+
+        public async Task<IActionResult> CloseDefect(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var defect = await _context.Defects
+                .FirstOrDefaultAsync(m => m.Id == id);
+            defect.Done = true;
+
+            try
+            {
+                _context.Update(defect);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DefectModelExists(defect.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction("Alltime", "Dashboard");
         }
 
         // GET: Defect/Create
@@ -67,7 +97,7 @@ namespace FM8020_MVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Defect/Create/{roomId}")]
-        public async Task<IActionResult> Create(int roomId, [Bind("Id,Title,Timestamp,Description")] DefectModel defectModel)
+        public async Task<IActionResult> Create(int roomId, [Bind("Id,Title,Timestamp,DefectType,Description")] DefectModel defectModel)
         {
             Debug.WriteLine("Room id: ", roomId);
             RoomModel room = _context.Rooms.Find(roomId);
@@ -110,7 +140,7 @@ namespace FM8020_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Timestamp,Description,Done")] DefectModel defectModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Timestamp,Description,Responsibility,Done")] DefectModel defectModel)
         {
             if (id != defectModel.Id)
             {
@@ -135,7 +165,7 @@ namespace FM8020_MVC.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Dashboard", "Home");
+                return RedirectToAction("Alltime", "Dashboard");
             }
             return View(defectModel);
         }

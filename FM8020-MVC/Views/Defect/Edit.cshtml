@@ -29,13 +29,23 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Responsibility" class="control-label"></label>
+                <select asp-for="Responsibility" class="form-control">
+                    <option value="Unzugewiesen">Unzugewiesen</option>
+                    <option value="Uwe Bothe">Uwe Bothe</option>
+                    <option value="Facility Manager 2">Facility Manager 2</option>
+                    <option value="Facility Manager 3">Facility Manager 3</option>
+                </select>
+            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Done" /> @Html.DisplayNameFor(model => model.Done)
+                    Erledigt <input class="form-check-input" asp-for="Done" />
                 </label>
             </div>
             <div class="form-group">
-                <button class="btn btn-danger" asp-action="Dashboard" asp-controller="Home">Abbrechen</button>
+                <button class="btn btn-primary" asp-action="Weekly" asp-controller="Dashboard">Abbrechen</button>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Löschen</a>
                 <input type="submit" value="Speichern" class="btn btn-success" />
             </div>
         </form>

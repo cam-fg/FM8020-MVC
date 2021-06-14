@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
 
 <div>
     <h4>@Model.Title</h4>
@@ -18,10 +17,28 @@
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Room.Facility.FacilityCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room.Facility.FacilityCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Room.RoomNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Room.RoomNumber)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Timestamp)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Timestamp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DefectType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DefectType)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
@@ -30,6 +47,12 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Responsibility)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Responsibility)
+        </dd>        
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Done)
         </dt>
         <dd class="col-sm-10">
@@ -37,8 +60,16 @@
         </dd>
     </dl>
 </div>
+@if (!Model.Done)
+{
+    <div>
+        <p>
+            <a class="btn btn-outline-success" asp-action="CloseDefect" asp-route-id="@Model.Id">Als erledigt markieren</a>
+        </p>
+    </div>
+}
 <div>
-    <a class="btn btn-primary" asp-action="Dashboard" asp-controller="Home"><i class="fa fa-chevron-left"></i> Zurück</a>
+    <a class="btn btn-primary" asp-action="Weekly" asp-controller="Dashboard"><i class="fa fa-chevron-left"></i> Zurück</a>
     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Bearbeiten</a>
     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Löschen</a>
 </div>

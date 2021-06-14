@@ -1,0 +1,135 @@
+﻿@model FM8020_MVC.Models.DefectViewModel
+
+@{String action = ViewContext.RouteData.Values["action"].ToString();}
+<div class="d-flex justify-content-md-center">
+    <table class="table-responsive-md">
+        <tbody>
+            <tr class="text-center">
+                <td>
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="@action" asp-route-filterString="Open">
+                        <b>@Model.OpenCount</b>
+
+                    </a>
+                </td>
+                <td>
+                    @{ var today = DateTime.Today.Date;}
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="@action" asp-route-filterString="New">
+                        <b>@Model.NewCount</b>
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="@action" asp-route-filterString="Done">
+                        <b>@Model.DoneCount</b>
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-light btn-lg border-primary m-3 mb-0" asp-action="@action" asp-route-filterString="All">
+                        <b>@Model.TotalCount</b>
+                    </a>
+                </td>
+            </tr>
+            <tr class="text-center">
+                <td>Offen</td>
+                <td>Neu</td>
+                <td>Erledigt</td>
+                <td>Gesamt</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br />
+<p>
+    <div class="d-inline-flex">
+        <div class="dropdown float-right col m-2">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-sort"></i> Sortieren </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" asp-action="@action" asp-route-sortOrder="date_desc">Neueste zuerst</a>
+                <a class="dropdown-item" asp-action="@action" asp-route-sortOrder="Date">Älteste zuerst</a>
+                <a class="dropdown-item" asp-action="@action" asp-route-sortOrder="Room">Nach Räumen</a>
+            </div>
+        </div>
+        <div class="dropdown float-right col m-2">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" id="dropdownComponentFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter"></i> Kategorie </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownComponentFilter">
+                <a class="dropdown-item" asp-action="@action" asp-route-componentFilter="all">Alle</a>
+                @foreach (ComponentType ct in Enum.GetValues(typeof(ComponentType)).Cast<ComponentType>().ToList())
+                {
+                    <a class="dropdown-item" asp-action="@action" asp-route-componentFilter="@ct">@ct</a>
+                }
+
+            </div>
+        </div>
+    </div>
+
+</p>
+<div class="accordion" id="dashboardAccordion">
+    @foreach (DefectModel defect in Model.FilteredDefects)
+    {
+    <div class="card mb-2">
+        <div class="card-header d-flex justify-content-between" id="heading_@defect.Id">
+            <div class="float-left">
+                <button class="btn" type="button" data-toggle="collapse" data-target="#collapse_@defect.Id" aria-expanded="true" aria-controls="collapse_@defect.Id">
+                    <h5>@defect.Title</h5>
+                </button>
+                @Html.DisplayFor(modelItem => defect.Room.Facility.FacilityCode), Raum @Html.DisplayFor(modelItem => defect.Room.RoomNumber) -
+                @defect.Timestamp.ToString("dd.MM.yyyy")
+            </div>
+            <div class="float-right">
+                @if (!defect.Done) {
+                <a class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalCenter">Erledigt</a>
+                }
+                <a class="btn btn-primary float-right" asp-controller="Defect" asp-action="Edit" asp-route-id="@defect.Id">Bearbeiten</a>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">@defect.Title</h5>
+                        <button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Das Ticket "@defect.Title" als erledigt markieren?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Abbrechen</button>
+                        <a class="btn btn-success" asp-controller="Defect" asp-action="CloseDefect" asp-route-id="@defect.Id">Bestätigen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="collapse_@defect.Id" class="collapse hide" aria-labelledby="heading_@defect.Id" data-parent="#dashboardAccordion">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        Kategorie:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @defect.DefectType
+                    </dd>
+                    <dt class="col-sm-2">
+                        Zuständigkeit:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @defect.Responsibility
+                    </dd>
+                    <dt class="col-sm-2">
+                        Erledigt:
+                    </dt>
+                    <dd class="col-sm-10">
+                        <i class="@(defect.Done ? "fa fa-check" : "fa fa-times")"></i>
+                    </dd>
+                    <dt class="col-sm-2">
+                        Beschreibung:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @defect.Description
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    }
+</div>
